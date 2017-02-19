@@ -1,0 +1,8 @@
+1,3c1,3
+< /home/keon/EECS678/Project1/quash/test-cases/t4_builtin/sandbox 
+< /home/keon/EECS678/Project1/quash/test-cases/t4_builtin/sandbox 
+< hello\\n 
+---
+> sandbox
+> sandbox
+> hello

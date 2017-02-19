@@ -1,0 +1,32 @@
+==75769== Memcheck, a memory error detector
+==75769== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==75769== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==75769== Command: /home/keon/EECS678/Project1/quash/quash
+==75769== 
+==75770== 
+==75770== HEAP SUMMARY:
+==75770==     in use at exit: 0 bytes in 0 blocks
+==75770==   total heap usage: 7 allocs, 7 frees, 21,906 bytes allocated
+==75770== 
+==75770== All heap blocks were freed -- no leaks are possible
+==75770== 
+==75770== For counts of detected and suppressed errors, rerun with: -v
+==75770== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==75771== 
+==75771== HEAP SUMMARY:
+==75771==     in use at exit: 0 bytes in 0 blocks
+==75771==   total heap usage: 13 allocs, 13 frees, 23,852 bytes allocated
+==75771== 
+==75771== All heap blocks were freed -- no leaks are possible
+==75771== 
+==75771== For counts of detected and suppressed errors, rerun with: -v
+==75771== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==75769== 
+==75769== HEAP SUMMARY:
+==75769==     in use at exit: 0 bytes in 0 blocks
+==75769==   total heap usage: 34 allocs, 34 frees, 31,096 bytes allocated
+==75769== 
+==75769== All heap blocks were freed -- no leaks are possible
+==75769== 
+==75769== For counts of detected and suppressed errors, rerun with: -v
+==75769== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
