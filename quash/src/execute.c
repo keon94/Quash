@@ -13,13 +13,11 @@
 #include <stdio.h>
 
 #include "quash.h"
+#include "parsing_interface.h"
 
 #include <sys/wait.h>
 #include <errno.h>
 
-//#if EXECUTE_C
-#define MAX_SIZE 1024
-//#endif
 
 
 // Remove this and all expansion calls to it
@@ -28,6 +26,22 @@
  */
 #define IMPLEMENT_ME()                                                  \
   fprintf(stderr, "IMPLEMENT ME: %s(line %d): %s()\n", __FILE__, __LINE__, __FUNCTION__)
+
+#define MAX_SIZE 1024
+
+
+typedef struct Job{
+  int job_id;  //id for the job
+  pid_t pid; //the process id of the first process in the job
+  char* cmd_input; //received cmd command for the job
+} Job;
+
+
+IMPLEMENT_DEQUE_STRUCT(JobQueue, Job); // struct JobQueue - A list structure for all the jobs running in quash
+PROTOTYPE_DEQUE(JobQueue, Job);
+IMPLEMENT_DEQUE(JobQueue, Job);
+
+JobQueue job_queue = {NULL,0,0,0};
 
 
 /***************************************************************************
@@ -308,7 +322,7 @@ void parent_run_command(Command cmd) {
  *
  * @sa Command CommandHolder
  */
-void create_process(CommandHolder holder) {
+void create_process(CommandHolder holder, pid_t *first_child_pid) {
   // Read the flags field from the parser
   bool p_in  = holder.flags & PIPE_IN;
   bool p_out = holder.flags & PIPE_OUT;
@@ -331,6 +345,8 @@ void create_process(CommandHolder holder) {
 	pid_t m_pid;
 
 	m_pid = fork();
+  if(first_child_pid)
+    *first_child_pid = m_pid;
 	if(m_pid == 0){   
 		child_run_command(holder.cmd); // This should be done in the child branch of a fork;
     exit(EXIT_SUCCESS);
@@ -341,13 +357,10 @@ void create_process(CommandHolder holder) {
 		  parent_run_command(holder.cmd); // This should be done in the parent branch of // a fork
       int status;                            
       if ((waitpid(m_pid, &status, 0)) == -1) {
-        fprintf(stderr, "Process 1 encountered an error. ERROR %d\n", errno);
+        fprintf(stderr, "Process encountered an error. ERROR %d\n", errno);
         exit(EXIT_FAILURE);
-      }
-      
+      }     
 	}
-	//
-  //printf("pwd is now: %s\n", getenv("PWD"));
 }
 
 
@@ -365,15 +378,15 @@ void run_script(CommandHolder* holders) {
     return;
   }
 
+  Job job = {.job_id = 1, .pid = 0 , .cmd_input = get_command_string()};
+  
   CommandType type;
-
   // Run all commands in the `holder` array
-  for (int i = 0; (type = get_command_holder_type(holders[i])) != EOC; ++i){
-    debug_print_script(holders);
-		create_process(holders[i]);
-		//printf("cd dir is: %s\n",get_current_directory(NULL));
-
+	create_process(holders[0], &job.pid); //pass in pid for first process (child)
+  for (int i = 1; (type = get_command_holder_type(holders[i])) != EOC; ++i){
+		create_process(holders[i], NULL); //NULL because these are the remaining processes (after the first child)
 	}
+  
   if (!(holders[0].flags & BACKGROUND)) {
     // Not a background Job
     // TODO: Wait for all processes under the job to complete
@@ -384,9 +397,17 @@ void run_script(CommandHolder* holders) {
   else {
     // A background job.
     // TODO: Push the new job to the job queue
-    IMPLEMENT_ME();
-
+    //IMPLEMENT_ME();
+    
+    if(job_queue.cap == 0){
+      job_queue = new_JobQueue(1); //if the queue is empty, initialise it (to size 1)
+    }
+    else
+      job.job_id = peek_back_JobQueue(&job_queue).job_id + 1; //otherwise assign a new job id
+    
+    push_front_JobQueue(&job_queue, job); //push to the queue the new job
+    //TODO: need to take care of deallocations of the jobs upon completion
     // TODO: Once jobs are implemented, uncomment and fill the following line
-     //print_job_bg_start(job_id, pid, cmd);
+    print_job_bg_start(job.job_id, job.pid, job.cmd_input);
   }
 }

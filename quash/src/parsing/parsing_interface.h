@@ -43,9 +43,9 @@ IMPLEMENT_DEQUE_STRUCT(CmdStrs, char*);
  * @sa Example
  */
 IMPLEMENT_DEQUE_STRUCT(Cmds, CommandHolder);
-
 PROTOTYPE_DEQUE(CmdStrs, char*);
 PROTOTYPE_DEQUE(Cmds, CommandHolder);
+
 /** @endcond Doxygen_Suppress */
 
 
