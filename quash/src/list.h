@@ -56,8 +56,9 @@ void add_to_front(List* l, void* data){
 //removes node n, and links its previous Node to its next. If no destructor is specified it returns the data, otherwise 
 //the data is freed and it returns NULL
 void* remove_node(List* l, Node* n, void(*destructor)(void*)){
+    assert(l != NULL);
     assert(n != NULL);
-    Node *n_prev, *n_next;
+    assert(!is_empty(l));
     if(n->prev_node)
         n->prev_node->next_node = n->next_node;
     else
@@ -78,13 +79,12 @@ void* remove_node(List* l, Node* n, void(*destructor)(void*)){
 
 //removes the rearmost node using the provided destructor function pointer and returns its associated data
 void* remove_from_back(List* l, void(*destructor)(void*)){
-    assert(l != NULL);
-    assert(l->size > 0);
     return remove_node(l, l->back, destructor);
 }
 
 
 void destroy_list(List *l, void(*destructor)(void*)){
+    assert(l != NULL);
     while(!is_empty(l))
         remove_from_back(l, destructor);
 }

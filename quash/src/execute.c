@@ -17,6 +17,7 @@
 
 #include <sys/wait.h>
 #include <errno.h>
+#include <signal.h>
 
 
 
@@ -29,10 +30,13 @@
 
 #define MAX_SIZE 1024
 
+IMPLEMENT_DEQUE_STRUCT(pidQueue, pid_t); // struct JobQueue - A list structure for all the jobs running in quash
+PROTOTYPE_DEQUE(pidQueue, pid_t);
+IMPLEMENT_DEQUE(pidQueue, pid_t);
 
 typedef struct Job{
   int job_id;  //id for the job
-  pid_t pid; //the process id of the first process in the job
+  pidQueue pid_queue; //the process ids of the processes in the job
   char* cmd_input; //received cmd command for the job
 } Job;
 
@@ -40,6 +44,8 @@ typedef struct Job{
 IMPLEMENT_DEQUE_STRUCT(JobQueue, Job); // struct JobQueue - A list structure for all the jobs running in quash
 PROTOTYPE_DEQUE(JobQueue, Job);
 IMPLEMENT_DEQUE(JobQueue, Job);
+
+
 
 JobQueue job_queue = {NULL,0,0,0};
 
@@ -77,7 +83,16 @@ void check_jobs_bg_status() {
   // jobs. This function should remove jobs from the jobs queue once all
   // processes belonging to a job have completed.
   //IMPLEMENT_ME();
-
+  // for every child in the job_queue
+    //for every child in the pid queue per job
+    //JobQueue job_queue_copy = 
+    int status;
+    for(Job job = peek_back_JobQueue(&job_queue); !is_empty_JobQueue(&job_queue); pop_back_JobQueue(&job_queue)){
+      for(pid_t child_pid = peek_back_pidQueue(&job.pid_queue);;)
+        if(waitpid(child_pid, &status, WNOHANG) == ECHILD){
+          //child pid is done. remove from queue
+        }
+    }
   // TODO: Once jobs are implemented, uncomment and fill the following line
   // print_job_bg_complete(job_id, pid, cmd);
 }
@@ -322,7 +337,7 @@ void parent_run_command(Command cmd) {
  *
  * @sa Command CommandHolder
  */
-void create_process(CommandHolder holder, pid_t *first_child_pid) {
+void create_process(CommandHolder holder, pidQueue* pid_queue) {
   // Read the flags field from the parser
   bool p_in  = holder.flags & PIPE_IN;
   bool p_out = holder.flags & PIPE_OUT;
@@ -345,24 +360,17 @@ void create_process(CommandHolder holder, pid_t *first_child_pid) {
 	pid_t m_pid;
 
 	m_pid = fork();
-  if(first_child_pid)
-    *first_child_pid = m_pid;
+
 	if(m_pid == 0){   
 		child_run_command(holder.cmd); // This should be done in the child branch of a fork;
     exit(EXIT_SUCCESS);
 	}
-	else{
-    
+	else{    
     if(get_command_type(holder.cmd) == CD || get_command_type(holder.cmd) == EXPORT || get_command_type(holder.cmd) == KILL)
-		  parent_run_command(holder.cmd); // This should be done in the parent branch of // a fork
-      int status;                            
-      if ((waitpid(m_pid, &status, 0)) == -1) {
-        fprintf(stderr, "Process encountered an error. ERROR %d\n", errno);
-        exit(EXIT_FAILURE);
-      }     
+		  parent_run_command(holder.cmd); // This should be done in the parent branch of // a fork        
+      push_front_pidQueue(pid_queue, m_pid);                             
 	}
 }
-
 
 
 // Run a list of commands
@@ -370,7 +378,8 @@ void run_script(CommandHolder* holders) {
   if (holders == NULL)
     return;
 
-  check_jobs_bg_status();
+  if(job_queue.data)
+    check_jobs_bg_status();
 
   if (get_command_holder_type(holders[0]) == EXIT &&
       get_command_holder_type(holders[1]) == EOC) {
@@ -378,18 +387,28 @@ void run_script(CommandHolder* holders) {
     return;
   }
 
-  Job job = {.job_id = 1, .pid = 0 , .cmd_input = get_command_string()};
+  Job job = {.job_id = 1, .pid_queue = new_pidQueue(1), .cmd_input = get_command_string()};
   
   CommandType type;
   // Run all commands in the `holder` array
-	create_process(holders[0], &job.pid); //pass in pid for first process (child)
-  for (int i = 1; (type = get_command_holder_type(holders[i])) != EOC; ++i){
-		create_process(holders[i], NULL); //NULL because these are the remaining processes (after the first child)
+
+  for (int i = 0; (type = get_command_holder_type(holders[i])) != EOC; ++i){
+		create_process(holders[i], &job.pid_queue); 
 	}
   
   if (!(holders[0].flags & BACKGROUND)) {
     // Not a background Job
     // TODO: Wait for all processes under the job to complete
+      int status;
+      for(pid_t child_process = peek_back_pidQueue(&job.pid_queue); !is_empty_pidQueue(&job.pid_queue) ;pop_back_pidQueue(&job.pid_queue)){
+        if ((waitpid(child_process, &status, 0)) == -1) {
+          fprintf(stderr, "Process encountered an error. ERROR %d\n", errno);
+          exit(EXIT_FAILURE);
+        } 
+        else{
+          printf("Process successfully done\n");
+        }
+      }
 
      //first command   
     //IMPLEMENT_ME();
@@ -408,6 +427,8 @@ void run_script(CommandHolder* holders) {
     push_front_JobQueue(&job_queue, job); //push to the queue the new job
     //TODO: need to take care of deallocations of the jobs upon completion
     // TODO: Once jobs are implemented, uncomment and fill the following line
-    print_job_bg_start(job.job_id, job.pid, job.cmd_input);
+
+    print_job_bg_start(job.job_id, peek_back_pidQueue(&job.pid_queue), job.cmd_input);
+
   }
 }
