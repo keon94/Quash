@@ -35,6 +35,13 @@ typedef struct Job{
   char* cmd_input; //received cmd command for the job
 } Job;
 
+void remove_job(Job* job){
+  assert(job != NULL);
+  if(job->cmd_input)
+    free(job->cmd_input);
+  free(job);
+}
+
 List job_list = {NULL, NULL, 0};
 
 /***************************************************************************
@@ -67,17 +74,15 @@ const char* lookup_env(const char* env_var) {
 
 // Check the status of background jobs
 void check_jobs_bg_status() {
-  // TODO: Check on the statuses of all processes belonging to all background
-  // jobs. This function should remove jobs from the jobs queue once all
-  // processes belonging to a job have completed.
     
-    int status;
+    int status, job_count = 0, pid_count = 0;
     bool all_processes_completed;
     pid_t pid, back_pid, pid_state;
-    for(Node *job_node = job_list.back; job_node != NULL; job_node = job_node->next_node){
+    
+    for(Node *job_node = job_list.back; job_count < job_list.size ; ++job_count){
       all_processes_completed = true;
       back_pid = *(pid_t*)peek_back(&((Job*)peek(job_node))->pid_list);
-      for(Node* pid_node = ((Job*)peek(job_node))->pid_list.back; pid_node != NULL; pid_node = pid_node->next_node){
+      for(Node* pid_node = ((Job*)peek(job_node))->pid_list.back; pid_count < ((Job*)peek(job_node))->pid_list.size; ++pid_count){
         pid = *(pid_t*)peek(pid_node);
         pid_state = waitpid(pid, &status, WNOHANG);
         if(pid_state == pid){
@@ -91,13 +96,20 @@ void check_jobs_bg_status() {
         else{
           //child process is still running, so job is incomplete
           all_processes_completed = false;
-          break;
         }
+        if(pid_count >= ((Job*)peek(job_node))->pid_list.size - 1)
+          break;
+        else
+          pid_node = pid_node->next_node;
       }
-      if(all_processes_completed){ //all children are finished, so the job is done
+      if(all_processes_completed){ //all children are finished, so the job is done. remove it from the job list.
         print_job_bg_complete(((Job*)peek(job_node))->job_id, back_pid, ((Job*)peek(job_node))->cmd_input); 
-        remove_node(&job_list, job_node, NULL);    
+        remove_node(&job_list, job_node, (void*)remove_job);   //frees the job 
       }
+      if(job_count >= job_list.size - 1)
+        break;
+      else
+        job_node = job_node->next_node;   //-> this line creates read-errors in valgrind when more than 2 bg jobs have terminated.  
     }
     
 }
@@ -399,10 +411,9 @@ void run_script(CommandHolder* holders) {
     end_main_loop();
     return;
   }
-
+ 
   Job* job = malloc(sizeof(Job));
   init_job(job);
-  
   
   CommandType type;
   // Run all commands in the `holder` array
@@ -414,7 +425,7 @@ void run_script(CommandHolder* holders) {
     // Not a background Job
     // TODO: Wait for all processes under the job to complete
       int status;
-      for(pid_t child_process = *(pid_t*)peek_back(&job->pid_list); !is_empty(&job->pid_list) ;remove_from_back(&job->pid_list, NULL)){
+      for(pid_t child_process = *(pid_t*)peek_back(&job->pid_list); !is_empty(&job->pid_list) ;remove_from_back(&job->pid_list, &free)){
         if ((waitpid(child_process, &status, 0)) == -1) {
           fprintf(stderr, "Process encountered an error. ERROR %d\n", errno);
           exit(EXIT_FAILURE);
@@ -422,10 +433,9 @@ void run_script(CommandHolder* holders) {
         /*else{
           printf("Forground process successfully completed.\n"); //remove later
         }*/
+      
       }
-
-     //first command   
-    //IMPLEMENT_ME();
+      remove_job(job);
   }
   else {
     // A background job->
