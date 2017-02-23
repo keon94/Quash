@@ -16,7 +16,6 @@
 #include <stdio.h>
 
 #include "command.h"
-#include "execute.h"
 #include "parsing_interface.h"
 #include "memory_pool.h"
 
@@ -120,6 +119,7 @@ int main(int argc, char** argv) {
 
   atexit(destroy_parser);
   atexit(destroy_memory_pool);
+  
 
   // Main execution loop
   while (is_running()) {

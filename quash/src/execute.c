@@ -12,13 +12,12 @@
 
 #include <stdio.h>
 
-#include "quash.h"
 #include "parsing_interface.h"
 
 #include <sys/wait.h>
 #include <errno.h>
 #include <signal.h>
-
+#include "list.h"
 
 
 // Remove this and all expansion calls to it
@@ -30,25 +29,13 @@
 
 #define MAX_SIZE 1024
 
-IMPLEMENT_DEQUE_STRUCT(pidQueue, pid_t); // struct JobQueue - A list structure for all the jobs running in quash
-PROTOTYPE_DEQUE(pidQueue, pid_t);
-IMPLEMENT_DEQUE(pidQueue, pid_t);
-
 typedef struct Job{
   int job_id;  //id for the job
-  pidQueue pid_queue; //the process ids of the processes in the job
+  List pid_list; //the process ids of the processes in the job
   char* cmd_input; //received cmd command for the job
 } Job;
 
-
-IMPLEMENT_DEQUE_STRUCT(JobQueue, Job); // struct JobQueue - A list structure for all the jobs running in quash
-PROTOTYPE_DEQUE(JobQueue, Job);
-IMPLEMENT_DEQUE(JobQueue, Job);
-
-
-
-JobQueue job_queue = {NULL,0,0,0};
-
+List job_list = {NULL, NULL, 0};
 
 /***************************************************************************
  * Interface Functions
@@ -77,24 +64,42 @@ const char* lookup_env(const char* env_var) {
   return getenv(env_var);
 }
 
+
 // Check the status of background jobs
 void check_jobs_bg_status() {
   // TODO: Check on the statuses of all processes belonging to all background
   // jobs. This function should remove jobs from the jobs queue once all
   // processes belonging to a job have completed.
-  //IMPLEMENT_ME();
-  // for every child in the job_queue
-    //for every child in the pid queue per job
-    //JobQueue job_queue_copy = 
+    
     int status;
-    for(Job job = peek_back_JobQueue(&job_queue); !is_empty_JobQueue(&job_queue); pop_back_JobQueue(&job_queue)){
-      for(pid_t child_pid = peek_back_pidQueue(&job.pid_queue);;)
-        if(waitpid(child_pid, &status, WNOHANG) == ECHILD){
-          //child pid is done. remove from queue
+    bool all_processes_completed;
+    pid_t pid, back_pid, pid_state;
+    for(Node *job_node = job_list.back; job_node != NULL; job_node = job_node->next_node){
+      all_processes_completed = true;
+      back_pid = *(pid_t*)peek_back(&((Job*)peek(job_node))->pid_list);
+      for(Node* pid_node = ((Job*)peek(job_node))->pid_list.back; pid_node != NULL; pid_node = pid_node->next_node){
+        pid = *(pid_t*)peek(pid_node);
+        pid_state = waitpid(pid, &status, WNOHANG);
+        if(pid_state == pid){
+          remove_node( &((Job*)peek(job_node))->pid_list , pid_node, &free); //child pid is done. remove from pid queue
         }
+        else if(pid_state == -1){ //child encountered an error, job is complete, but with errors
+          remove_node( &((Job*)peek(job_node))->pid_list , pid_node, &free);
+          fprintf(stderr,"An error occured in Job %d. Child Process %d returned error code %d.\n", ((Job*)peek(job_node))->job_id, pid, errno); //error handling
+          fflush(stderr);
+        }
+        else{
+          //child process is still running, so job is incomplete
+          all_processes_completed = false;
+          break;
+        }
+      }
+      if(all_processes_completed){ //all children are finished, so the job is done
+        print_job_bg_complete(((Job*)peek(job_node))->job_id, back_pid, ((Job*)peek(job_node))->cmd_input); 
+        remove_node(&job_list, job_node, NULL);    
+      }
     }
-  // TODO: Once jobs are implemented, uncomment and fill the following line
-  // print_job_bg_complete(job_id, pid, cmd);
+    
 }
 
 // Prints the job id number, the process id of the first process belonging to
@@ -229,10 +234,10 @@ void run_pwd() {
 
 // Prints all background jobs currently in the job list to stdout
 void run_jobs() {
-  // TODO: Print background jobs
-  IMPLEMENT_ME();
-
-  // Flush the buffer before returning
+  for(Node* job_node = job_list.back; job_node != NULL; job_node = job_node->next_node){
+    print_job(((Job*)peek(job_node))->job_id, *(pid_t*)peek_back(&((Job*)peek(job_node))->pid_list), ((Job*)peek(job_node))->cmd_input);
+  }
+  printf("\n");
   fflush(stdout);
 }
 
@@ -304,22 +309,26 @@ void parent_run_command(Command cmd) {
     run_kill(cmd.kill);
     break;
   case GENERIC:
-    break;
   case ECHO:
-    break;
   case PWD:
-    break;
   case JOBS:
-    break;
   case EXIT:
-    break;
   case EOC:
     break;
-
   default:
     fprintf(stderr, "Unknown command type: %d\n", type);
   }
 }
+
+ void destroy_job_list(){   
+    if(!is_empty(&job_list)){
+      destroy_list(&job_list, &destroy_pid_list);
+    }
+ }
+
+ void destroy_pid_list(Job* bg_job){
+
+ }
 
 
 /**
@@ -328,7 +337,7 @@ void parent_run_command(Command cmd) {
  *
  * @note Processes are not the same as jobs. A single job can have multiple
  * processes running under it. This function creates a process that is part of a
- * larger job.
+ * larger job->
  *
  * @note Not all commands should be run in the child process. A few need to
  * change the quash process in some way
@@ -337,7 +346,7 @@ void parent_run_command(Command cmd) {
  *
  * @sa Command CommandHolder
  */
-void create_process(CommandHolder holder, pidQueue* pid_queue) {
+void create_process(CommandHolder holder, List* pid_list) {
   // Read the flags field from the parser
   bool p_in  = holder.flags & PIPE_IN;
   bool p_out = holder.flags & PIPE_OUT;
@@ -355,30 +364,34 @@ void create_process(CommandHolder holder, pidQueue* pid_queue) {
 
   // TODO: Setup pipes, redirects, and new process
   //IMPLEMENT_ME();
-	//printf("%s\n%s\n%c\n", holder.redirect_in, holder.redirect_out, holder.flags);
 
-	pid_t m_pid;
+	pid_t *m_pid = malloc(sizeof(pid_t));
+	*m_pid = fork();
 
-	m_pid = fork();
-
-	if(m_pid == 0){   
+	if(*m_pid == 0){   
 		child_run_command(holder.cmd); // This should be done in the child branch of a fork;
     exit(EXIT_SUCCESS);
 	}
 	else{    
     if(get_command_type(holder.cmd) == CD || get_command_type(holder.cmd) == EXPORT || get_command_type(holder.cmd) == KILL)
-		  parent_run_command(holder.cmd); // This should be done in the parent branch of // a fork        
-      push_front_pidQueue(pid_queue, m_pid);                             
+		  parent_run_command(holder.cmd); // This should be done in the parent branch of // a fork             
+    add_to_front(pid_list, m_pid);  
+    //printf("pid proc: %p , %d\n",peek_back(pid_list), *(int*)peek_back(pid_list));                               
 	}
 }
 
+void init_job(Job* job){
+  job->job_id = 1;
+  init_list(&job->pid_list);
+  job->cmd_input = get_command_string();
+}
 
 // Run a list of commands
 void run_script(CommandHolder* holders) {
   if (holders == NULL)
     return;
 
-  if(job_queue.data)
+  if(!is_empty(&job_list))
     check_jobs_bg_status();
 
   if (get_command_holder_type(holders[0]) == EXIT &&
@@ -387,48 +400,42 @@ void run_script(CommandHolder* holders) {
     return;
   }
 
-  Job job = {.job_id = 1, .pid_queue = new_pidQueue(1), .cmd_input = get_command_string()};
+  Job* job = malloc(sizeof(Job));
+  init_job(job);
+  
   
   CommandType type;
   // Run all commands in the `holder` array
 
   for (int i = 0; (type = get_command_holder_type(holders[i])) != EOC; ++i){
-		create_process(holders[i], &job.pid_queue); 
-	}
-  
+		create_process(holders[i], &job->pid_list); 
+	} 
   if (!(holders[0].flags & BACKGROUND)) {
     // Not a background Job
     // TODO: Wait for all processes under the job to complete
       int status;
-      for(pid_t child_process = peek_back_pidQueue(&job.pid_queue); !is_empty_pidQueue(&job.pid_queue) ;pop_back_pidQueue(&job.pid_queue)){
+      for(pid_t child_process = *(pid_t*)peek_back(&job->pid_list); !is_empty(&job->pid_list) ;remove_from_back(&job->pid_list, NULL)){
         if ((waitpid(child_process, &status, 0)) == -1) {
           fprintf(stderr, "Process encountered an error. ERROR %d\n", errno);
           exit(EXIT_FAILURE);
         } 
-        else{
-          printf("Process successfully done\n");
-        }
+        /*else{
+          printf("Forground process successfully completed.\n"); //remove later
+        }*/
       }
 
      //first command   
     //IMPLEMENT_ME();
   }
   else {
-    // A background job.
-    // TODO: Push the new job to the job queue
-    //IMPLEMENT_ME();
+    // A background job->
     
-    if(job_queue.cap == 0){
-      job_queue = new_JobQueue(1); //if the queue is empty, initialise it (to size 1)
+    if(!is_empty(&job_list)){
+      job->job_id = ((Job*)peek_front(&job_list))->job_id + 1; //otherwise assign a new job id
     }
-    else
-      job.job_id = peek_back_JobQueue(&job_queue).job_id + 1; //otherwise assign a new job id
-    
-    push_front_JobQueue(&job_queue, job); //push to the queue the new job
+    add_to_front(&job_list, job); //push to the queue the new job
     //TODO: need to take care of deallocations of the jobs upon completion
-    // TODO: Once jobs are implemented, uncomment and fill the following line
-
-    print_job_bg_start(job.job_id, peek_back_pidQueue(&job.pid_queue), job.cmd_input);
+    print_job_bg_start(job->job_id, *(pid_t*)peek_back(&job->pid_list), job->cmd_input);
 
   }
 }

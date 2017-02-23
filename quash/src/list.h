@@ -1,5 +1,5 @@
-#ifndef LIST_H
-#define LIST_H
+#ifndef SRC_LIST_H
+#define SRC_LIST_H
 
 #include <stdbool.h>
 #include <assert.h>
@@ -77,6 +77,23 @@ void* remove_node(List* l, Node* n, void(*destructor)(void*)){
     return n_data;
 }
 
+void* peek(Node* n){
+    assert(n != NULL);
+    return n->data;
+}
+
+void* peek_back(List* l){
+    assert(l != NULL);
+    assert(!is_empty(l));
+    return peek(l->back);
+}
+
+void* peek_front(List* l){
+    assert(l != NULL);
+    assert(!is_empty(l));
+    return peek(l->front);
+}
+
 //removes the rearmost node using the provided destructor function pointer and returns its associated data
 void* remove_from_back(List* l, void(*destructor)(void*)){
     return remove_node(l, l->back, destructor);
@@ -93,13 +110,8 @@ void destroy_list(List *l, void(*destructor)(void*)){
 //inserts a new Node with data between n and n->next - Not needed for the quash project
 /*
 void insert_node(Node* n, void* data){
-
 }
 */
-
-
-
-
 
 
 #endif

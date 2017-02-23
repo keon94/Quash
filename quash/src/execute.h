@@ -12,6 +12,14 @@
 
 #include "command.h"
 
+
+
+void destroy_pid_list();
+
+
+void destroy_job_list();
+
+
 /**
  * @brief Function to get environment variable values
  *

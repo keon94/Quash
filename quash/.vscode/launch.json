@@ -6,7 +6,7 @@
             "name": "C++ Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/prog",
+            "program": "${workspaceRoot}/quash",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
