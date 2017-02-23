@@ -75,16 +75,17 @@ const char* lookup_env(const char* env_var) {
 // Check the status of background jobs
 void check_jobs_bg_status() {
     
-    int status, job_count = 0, pid_count = 0;
+    int status;
     bool all_processes_completed;
     pid_t pid, back_pid, pid_state;
-    
-    for(Node *job_node = job_list.back; job_count < job_list.size ; ++job_count){
+    Node *pid_node_next , *job_node_next;
+    for(Node *job_node = job_list.back; job_node != NULL ;){
       all_processes_completed = true;
       back_pid = *(pid_t*)peek_back(&((Job*)peek(job_node))->pid_list);
-      for(Node* pid_node = ((Job*)peek(job_node))->pid_list.back; pid_count < ((Job*)peek(job_node))->pid_list.size; ++pid_count){
+      for(Node* pid_node = ((Job*)peek(job_node))->pid_list.back; pid_node != NULL;){
         pid = *(pid_t*)peek(pid_node);
         pid_state = waitpid(pid, &status, WNOHANG);
+        pid_node_next = pid_node->next_node;
         if(pid_state == pid){
           remove_node( &((Job*)peek(job_node))->pid_list , pid_node, &free); //child pid is done. remove from pid queue
         }
@@ -97,19 +98,15 @@ void check_jobs_bg_status() {
           //child process is still running, so job is incomplete
           all_processes_completed = false;
         }
-        if(pid_count >= ((Job*)peek(job_node))->pid_list.size - 1)
-          break;
-        else
-          pid_node = pid_node->next_node;
+        pid_node = pid_node_next;
       }
+
+      job_node_next = job_node->next_node;
       if(all_processes_completed){ //all children are finished, so the job is done. remove it from the job list.
         print_job_bg_complete(((Job*)peek(job_node))->job_id, back_pid, ((Job*)peek(job_node))->cmd_input); 
         remove_node(&job_list, job_node, (void*)remove_job);   //frees the job 
       }
-      if(job_count >= job_list.size - 1)
-        break;
-      else
-        job_node = job_node->next_node;   //-> this line creates read-errors in valgrind when more than 2 bg jobs have terminated.  
+      job_node = job_node_next;
     }
     
 }

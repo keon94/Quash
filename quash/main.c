@@ -4,29 +4,27 @@
 
 
 void printList(List *l){
-    for(Node* n = l->back; n != NULL; n = n->next_node){
+    for(Node* n = l->back;; n = n->next_node){
         printf("%d ;", *(int*)n->data);
         printf("{%p , %p}\n", n->prev_node, n->next_node);
+        if(n == l->front) break;
     }
     printf("\n");
 
 }
 
-void foo(List *l){
-    int x2 = 2;   
-    add_to_front(l,&x2);
-    printList(l);
-}
 
 
 int main(){
 
     List l;
     init_list(&l);
-    int x1 = 1;
+    int x1 = 1, x2 = 2, x3 = 3, x4 = 4;
     
-    add_to_front(&l,&x1);  
-    foo(&l);
+    add_to_front(&l,&x1);
+    add_to_front(&l,&x2);
+    add_to_front(&l,&x3);
+    add_to_front(&l,&x4);
     printList(&l);  
     //foo(&l);
     //printList(&l);
