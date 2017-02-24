@@ -73,8 +73,6 @@ void kill_job_with_processes(Job* job){
 
 // Return a string containing the current working directory.
 char* get_current_directory(bool* should_free) {
-  // TODO: Get the current working directory. This will fix the prompt path.
-  // HINT: This should be pretty simple
   char* current_dir = malloc(sizeof(char)*MAX_SIZE);
 	return getcwd(current_dir,MAX_SIZE);
 
@@ -82,15 +80,6 @@ char* get_current_directory(bool* should_free) {
 
 // Returns the value of an environment variable env_var
 const char* lookup_env(const char* env_var) {
-  // TODO: Lookup environment variables. This is required for parser to be able
-  // to interpret variables from the command line and display the prompt
-  // correctly
-  // HINT: This should be pretty simple
-  //IMPLEMENT_ME();
-
-  // TODO: Remove warning silencers
-  (void) env_var; // Silence unused variable warning
-
   return getenv(env_var);
 }
 
@@ -102,10 +91,10 @@ void check_jobs_bg_status() {
     bool all_processes_completed;
     pid_t pid, back_pid, pid_state;
     Node *pid_node_next , *job_node_next;
-    for(Node *job_node = job_list.back; job_node != NULL ;){
+    for(Node *job_node = job_list.back; job_node != NULL ;){ //traverse the job list
       all_processes_completed = true;
-      back_pid = *(pid_t*)peek_back(&((Job*)peek(job_node))->pid_list);
-      for(Node* pid_node = ((Job*)peek(job_node))->pid_list.back; pid_node != NULL;){
+      back_pid = *(pid_t*)peek_back(&((Job*)peek(job_node))->pid_list); 
+      for(Node* pid_node = ((Job*)peek(job_node))->pid_list.back; pid_node != NULL;){ //traverse the pid list (in each job)
         pid = *(pid_t*)peek(pid_node);
         pid_state = waitpid(pid, &status, WNOHANG);
         pid_node_next = pid_node->next_node;
@@ -164,13 +153,6 @@ void run_generic(GenericCommand cmd) {
   // in the array is the executable
   char* exec = cmd.args[0];
   char** args = cmd.args;
-
-  // TODO: Remove warning silencers
-  (void) exec; // Silence unused variable warning
-  (void) args; // Silence unused variable warning
-
-  // TODO: Implement run generic
-  //IMPLEMENT_ME();
   execvp(exec, args);
   fprintf(stderr, "ERROR: Failed to execute %s. Error #%d\n", exec, errno);
   exit(EXIT_FAILURE);
@@ -182,10 +164,8 @@ void run_echo(EchoCommand cmd) {
   // string is always NULL) list of strings.
   char** str = cmd.args;
 
-  // TODO: Remove warning silencers
   (void) str; // Silence unused variable warning
 
-  // TODO: Implement echo
   for(; *str != '\0'; ++str ){
     printf("%s ", *str);
   }
@@ -200,12 +180,6 @@ void run_export(ExportCommand cmd) {
   const char* env_var = cmd.env_var;
   const char* val = cmd.val;
 
-  // TODO: Remove warning silencers
-  (void) env_var; // Silence unused variable warning
-  (void) val;     // Silence unused variable warning
-
-  // TODO: Implement export.
-  // HINT: This should be quite simple.
   if(setenv(env_var,val,1) == -1){
     fprintf(stderr,"Error: Failed to update the %s environment variable to %s. Error #%d\n",env_var,val,errno);
     exit(EXIT_FAILURE);  
@@ -244,12 +218,6 @@ void run_kill(KillCommand cmd) {
   int signal = cmd.sig;
   int job_id = cmd.job;
 
-  // TODO: Remove warning silencers
-  (void) signal; // Silence unused variable warning
-  (void) job_id; // Silence unused variable warning
-
-  // TODO: Kill all processes associated with a background job
-  //IMPLEMENT_ME();
   //check if job is running
   for(Node* job_node = job_list.back; job_node != NULL; job_node = job_node->next_node){   
     if(((Job*)peek(job_node))->job_id == job_id){ //find the job in the job list
@@ -264,8 +232,6 @@ void run_kill(KillCommand cmd) {
 
 // Prints the current working directory to stdout
 void run_pwd() {
-  // TODO: Print the current working directory
-  //IMPLEMENT_ME();
   char* cwd = get_current_directory(NULL);
 	printf("%s \n", cwd);
   // Flush the buffer before returning
@@ -405,8 +371,7 @@ void create_process(CommandHolder holder, List* pid_list) {
 	else{    
     if(get_command_type(holder.cmd) == CD || get_command_type(holder.cmd) == EXPORT || get_command_type(holder.cmd) == KILL)
 		  parent_run_command(holder.cmd); // This should be done in the parent branch of // a fork             
-    add_to_front(pid_list, m_pid);  
-    //printf("pid proc: %p , %d\n",peek_back(pid_list), *(int*)peek_back(pid_list));                               
+    add_to_front(pid_list, m_pid);                               
 	}
 }
 
@@ -441,7 +406,7 @@ void run_script(CommandHolder* holders) {
 	} 
   if (!(holders[0].flags & BACKGROUND)) {
     // Not a background Job
-    // TODO: Wait for all processes under the job to complete
+    // Wait for all processes under the job to complete
       int status;
       for(pid_t child_process = *(pid_t*)peek_back(&job->pid_list); !is_empty(&job->pid_list) ;remove_from_back(&job->pid_list, &free)){
         if ((waitpid(child_process, &status, 0)) == -1) {
@@ -458,7 +423,6 @@ void run_script(CommandHolder* holders) {
       job->job_id = ((Job*)peek_front(&job_list))->job_id + 1; //otherwise assign a new job id
     }
     add_to_front(&job_list, job); //push to the queue the new job
-    //TODO: need to take care of deallocations of the jobs upon completion
     print_job_bg_start(job->job_id, *(pid_t*)peek_back(&job->pid_list), job->cmd_input);
 
   }
