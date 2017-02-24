@@ -59,6 +59,11 @@ void* remove_node(List* l, Node* n, void(*destructor)(void*)){
     assert(l != NULL);
     assert(n != NULL);
     assert(!is_empty(l));
+    void* n_data = n->data;
+    if(destructor){
+        destructor(n->data);
+        n_data = NULL;
+    }
     if(n->prev_node)
         n->prev_node->next_node = n->next_node;
     else
@@ -67,15 +72,11 @@ void* remove_node(List* l, Node* n, void(*destructor)(void*)){
         n->next_node->prev_node = n->prev_node;
     else
         l->front = n->prev_node;
-    void* n_data = n->data;
-    if(destructor){
-        destructor(n->data);
-        n_data = NULL;
-    }
     free(n);
     l->size--;
     return n_data;
 }
+
 
 void* peek(Node* n){
     assert(n != NULL);

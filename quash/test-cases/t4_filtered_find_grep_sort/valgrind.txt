@@ -1,14 +1,21 @@
-==75822== Memcheck, a memory error detector
-==75822== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
-==75822== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
-==75822== Command: /home/keon/EECS678/Project1/quash/quash
-==75822== 
-==75822== 
-==75822== HEAP SUMMARY:
-==75822==     in use at exit: 0 bytes in 0 blocks
-==75822==   total heap usage: 26 allocs, 26 frees, 33,442 bytes allocated
-==75822== 
-==75822== All heap blocks were freed -- no leaks are possible
-==75822== 
-==75822== For counts of detected and suppressed errors, rerun with: -v
-==75822== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==23408== Memcheck, a memory error detector
+==23408== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==23408== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==23408== Command: /home/kamini/EECS678/Project1/Quash/quash/quash
+==23408== 
+==23408== 
+==23408== HEAP SUMMARY:
+==23408==     in use at exit: 223 bytes in 8 blocks
+==23408==   total heap usage: 33 allocs, 25 frees, 29,902 bytes allocated
+==23408== 
+==23408== LEAK SUMMARY:
+==23408==    definitely lost: 0 bytes in 0 blocks
+==23408==    indirectly lost: 0 bytes in 0 blocks
+==23408==      possibly lost: 0 bytes in 0 blocks
+==23408==    still reachable: 223 bytes in 8 blocks
+==23408==         suppressed: 0 bytes in 0 blocks
+==23408== Reachable blocks (those to which a pointer was found) are not shown.
+==23408== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==23408== 
+==23408== For counts of detected and suppressed errors, rerun with: -v
+==23408== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

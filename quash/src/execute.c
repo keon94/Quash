@@ -29,12 +29,18 @@
 
 #define MAX_SIZE 1024
 
+//the signal for killing a process. Its value is determined by run_kill
+static int kill_signal = -2;
+
 typedef struct Job{
   int job_id;  //id for the job
   List pid_list; //the process ids of the processes in the job
   char* cmd_input; //received cmd command for the job
 } Job;
 
+List job_list = {NULL, NULL, 0};
+
+//removes a job whose processes have all terminated
 void remove_job(Job* job){
   assert(job != NULL);
   if(job->cmd_input)
@@ -42,7 +48,24 @@ void remove_job(Job* job){
   free(job);
 }
 
-List job_list = {NULL, NULL, 0};
+//removes a job and kills all of its ongoing processes
+void kill_job_with_processes(Job* job){
+  assert(job != NULL);
+  pid_t pid;
+  //remove all processes in the job
+  while(!is_empty(&job->pid_list)){
+    pid = *(pid_t*)peek_back(&job->pid_list);
+    if(kill(pid, kill_signal) == -1){
+      fprintf(stderr, "Failed to kill process %d running under job %d. Error no. %d\n", job->job_id, pid, errno );
+    }
+    remove_from_back(&job->pid_list, &free); //get rid of the pid from the pid list
+  }
+  //remove the job
+  if(job->cmd_input)
+    free(job->cmd_input);
+  free(job);
+}
+
 
 /***************************************************************************
  * Interface Functions
@@ -226,7 +249,16 @@ void run_kill(KillCommand cmd) {
   (void) job_id; // Silence unused variable warning
 
   // TODO: Kill all processes associated with a background job
-  IMPLEMENT_ME();
+  //IMPLEMENT_ME();
+  //check if job is running
+  for(Node* job_node = job_list.back; job_node != NULL; job_node = job_node->next_node){   
+    if(((Job*)peek(job_node))->job_id == job_id){ //find the job in the job list
+      kill_signal = signal;
+      print_job_bg_complete(job_id, *(pid_t*)peek(((Job*)peek(job_node))->pid_list.back), (char*)((Job*)peek(job_node))->cmd_input);
+      remove_node(&job_list, job_node, (void*)kill_job_with_processes);
+      break;
+    }
+  }
 }
 
 
@@ -246,7 +278,6 @@ void run_jobs() {
   for(Node* job_node = job_list.back; job_node != NULL; job_node = job_node->next_node){
     print_job(((Job*)peek(job_node))->job_id, *(pid_t*)peek_back(&((Job*)peek(job_node))->pid_list), ((Job*)peek(job_node))->cmd_input);
   }
-  printf("\n");
   fflush(stdout);
 }
 
@@ -328,16 +359,6 @@ void parent_run_command(Command cmd) {
     fprintf(stderr, "Unknown command type: %d\n", type);
   }
 }
-
- void destroy_job_list(){   
-    if(!is_empty(&job_list)){
-      destroy_list(&job_list, &destroy_pid_list);
-    }
- }
-
- void destroy_pid_list(Job* bg_job){
-
- }
 
 
 /**
@@ -426,11 +447,7 @@ void run_script(CommandHolder* holders) {
         if ((waitpid(child_process, &status, 0)) == -1) {
           fprintf(stderr, "Process encountered an error. ERROR %d\n", errno);
           exit(EXIT_FAILURE);
-        } 
-        /*else{
-          printf("Forground process successfully completed.\n"); //remove later
-        }*/
-      
+        }       
       }
       remove_job(job);
   }

@@ -9,15 +9,7 @@
 
 #include <stdbool.h>
 #include <unistd.h>
-
 #include "command.h"
-
-
-
-void destroy_pid_list();
-
-
-void destroy_job_list();
 
 
 /**

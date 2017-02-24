@@ -1,54 +1,38 @@
-==75710== Memcheck, a memory error detector
-==75710== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
-==75710== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
-==75710== Command: /home/keon/EECS678/Project1/quash/quash
-==75710== 
-==75711== 
-==75711== HEAP SUMMARY:
-==75711==     in use at exit: 0 bytes in 0 blocks
-==75711==   total heap usage: 11 allocs, 11 frees, 28,290 bytes allocated
-==75711== 
-==75711== All heap blocks were freed -- no leaks are possible
-==75711== 
-==75711== For counts of detected and suppressed errors, rerun with: -v
-==75711== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-==75713== 
-==75713== HEAP SUMMARY:
-==75713==     in use at exit: 0 bytes in 0 blocks
-==75713==   total heap usage: 14 allocs, 14 frees, 29,634 bytes allocated
-==75713== 
-==75713== All heap blocks were freed -- no leaks are possible
-==75713== 
-==75713== For counts of detected and suppressed errors, rerun with: -v
-==75713== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-cat: pwd.txt: No such file or directory
-==75716== 
-==75716== HEAP SUMMARY:
-==75716==     in use at exit: 0 bytes in 0 blocks
-==75716==   total heap usage: 24 allocs, 24 frees, 35,874 bytes allocated
-==75716== 
-==75716== All heap blocks were freed -- no leaks are possible
-==75716== 
-==75716== For counts of detected and suppressed errors, rerun with: -v
-==75716== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-printf: missing operand
-Try 'printf --help' for more information.
-==75719== 
-==75719== HEAP SUMMARY:
-==75719==     in use at exit: 0 bytes in 0 blocks
-==75719==   total heap usage: 27 allocs, 27 frees, 37,218 bytes allocated
-==75719== 
-==75719== All heap blocks were freed -- no leaks are possible
-==75719== 
-==75719== For counts of detected and suppressed errors, rerun with: -v
-==75719== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-cat: echo.txt: No such file or directory
-==75710== 
-==75710== HEAP SUMMARY:
-==75710==     in use at exit: 0 bytes in 0 blocks
-==75710==   total heap usage: 29 allocs, 29 frees, 34,466 bytes allocated
-==75710== 
-==75710== All heap blocks were freed -- no leaks are possible
-==75710== 
-==75710== For counts of detected and suppressed errors, rerun with: -v
-==75710== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==23397== Memcheck, a memory error detector
+==23397== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==23397== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==23397== Command: /home/kamini/EECS678/Project1/Quash/quash/quash
+==23397== 
+==23577== 
+==23577== HEAP SUMMARY:
+==23577==     in use at exit: 66 bytes in 3 blocks
+==23577==   total heap usage: 14 allocs, 11 frees, 28,356 bytes allocated
+==23577== 
+==23577== LEAK SUMMARY:
+==23577==    definitely lost: 0 bytes in 0 blocks
+==23577==    indirectly lost: 0 bytes in 0 blocks
+==23577==      possibly lost: 0 bytes in 0 blocks
+==23577==    still reachable: 66 bytes in 3 blocks
+==23577==         suppressed: 0 bytes in 0 blocks
+==23577== Reachable blocks (those to which a pointer was found) are not shown.
+==23577== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==23577== 
+==23577== For counts of detected and suppressed errors, rerun with: -v
+==23577== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Process encountered an error. ERROR 10
+==23397== 
+==23397== HEAP SUMMARY:
+==23397==     in use at exit: 90 bytes in 4 blocks
+==23397==   total heap usage: 15 allocs, 11 frees, 23,288 bytes allocated
+==23397== 
+==23397== LEAK SUMMARY:
+==23397==    definitely lost: 0 bytes in 0 blocks
+==23397==    indirectly lost: 0 bytes in 0 blocks
+==23397==      possibly lost: 0 bytes in 0 blocks
+==23397==    still reachable: 90 bytes in 4 blocks
+==23397==         suppressed: 0 bytes in 0 blocks
+==23397== Reachable blocks (those to which a pointer was found) are not shown.
+==23397== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==23397== 
+==23397== For counts of detected and suppressed errors, rerun with: -v
+==23397== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
