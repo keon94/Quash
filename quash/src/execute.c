@@ -504,11 +504,11 @@ void run_script(CommandHolder* holders) {
     // Not a background Job
     // Wait for all processes under the job to complete
       int status;
-      for(pid_t* child_process = (pid_t*)peek_back(&job->pid_list); !is_empty(&job->pid_list) ;remove_from_back(&job->pid_list, &free)){
+      for(; !is_empty(&job->pid_list) ;remove_from_back(&job->pid_list, &free)){
         //printf("List: ");printList(&job->pid_list);
-        //printf("checking proc %d\n", *child_process);
-        if ((waitpid(*child_process, &status, 0)) == -1) {
-          fprintf(stderr, "Job %d, Process %d encountered an error. ERROR %d\n", job->job_id, *child_process, errno);
+        //printf("checking proc %d\n", *(pid_t*)peek_back(&job->pid_list));
+        if ((waitpid(*(pid_t*)peek_back(&job->pid_list), &status, 0)) == -1) {
+          fprintf(stderr, "Job %d, Process %d encountered an error. ERROR %d\n", job->job_id, *(pid_t*)peek_back(&job->pid_list), errno);
           //exit(EXIT_FAILURE);
         }      //find test-cases -type f -name '*'.txt | grep valgrind 
         /*else{

@@ -1,352 +1,232 @@
-==24624== Memcheck, a memory error detector
-==24624== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
-==24624== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
-==24624== Command: /home/kamini/EECS678/Project1/Quash/quash/quash
-==24624== 
-==24906== Invalid read of size 4
-==24906==    at 0x402B7F: run_script (execute.c:510)
-==24906==    by 0x401570: main (quash.c:133)
-==24906==  Address 0x520ab30 is 0 bytes inside a block of size 4 free'd
-==24906==    at 0x4C2EDEB: free (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24906==    by 0x401AEF: remove_node (list.h:64)
-==24906==    by 0x401CB2: remove_from_back (list.h:100)
-==24906==    by 0x402BDC: run_script (execute.c:507)
-==24906==    by 0x401570: main (quash.c:133)
-==24906==  Block was alloc'd at
-==24906==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24906==    by 0x4026E5: create_process (execute.c:384)
-==24906==    by 0x402AFD: run_script (execute.c:501)
-==24906==    by 0x401570: main (quash.c:133)
-==24906== 
-==24906== Invalid read of size 4
-==24906==    at 0x402BA4: run_script (execute.c:511)
-==24906==    by 0x401570: main (quash.c:133)
-==24906==  Address 0x520ab30 is 0 bytes inside a block of size 4 free'd
-==24906==    at 0x4C2EDEB: free (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24906==    by 0x401AEF: remove_node (list.h:64)
-==24906==    by 0x401CB2: remove_from_back (list.h:100)
-==24906==    by 0x402BDC: run_script (execute.c:507)
-==24906==    by 0x401570: main (quash.c:133)
-==24906==  Block was alloc'd at
-==24906==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24906==    by 0x4026E5: create_process (execute.c:384)
-==24906==    by 0x402AFD: run_script (execute.c:501)
-==24906==    by 0x401570: main (quash.c:133)
-==24906== 
-==24886== Invalid read of size 4
-==24886==    at 0x402B7F: run_script (execute.c:510)
-==24886==    by 0x401570: main (quash.c:133)
-==24886==  Address 0x520ab30 is 0 bytes inside a block of size 4 free'd
-==24886==    at 0x4C2EDEB: free (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24886==    by 0x401AEF: remove_node (list.h:64)
-==24886==    by 0x401CB2: remove_from_back (list.h:100)
-==24886==    by 0x402BDC: run_script (execute.c:507)
-==24886==    by 0x401570: main (quash.c:133)
-==24886==  Block was alloc'd at
-==24886==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24886==    by 0x4026E5: create_process (execute.c:384)
-==24886==    by 0x402AFD: run_script (execute.c:501)
-==24886==    by 0x401570: main (quash.c:133)
-==24886== 
-==24886== Invalid read of size 4
-==24886==    at 0x402BA4: run_script (execute.c:511)
-==24886==    by 0x401570: main (quash.c:133)
-==24886==  Address 0x520ab30 is 0 bytes inside a block of size 4 free'd
-==24886==    at 0x4C2EDEB: free (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24886==    by 0x401AEF: remove_node (list.h:64)
-==24886==    by 0x401CB2: remove_from_back (list.h:100)
-==24886==    by 0x402BDC: run_script (execute.c:507)
-==24886==    by 0x401570: main (quash.c:133)
-==24886==  Block was alloc'd at
-==24886==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24886==    by 0x4026E5: create_process (execute.c:384)
-==24886==    by 0x402AFD: run_script (execute.c:501)
-==24886==    by 0x401570: main (quash.c:133)
-==24886== 
-==24624== Invalid read of size 4
-==24624==    at 0x402B7F: run_script (execute.c:510)
-==24624==    by 0x401570: main (quash.c:133)
-==24624==  Address 0x520ab30 is 0 bytes inside a block of size 4 free'd
-==24624==    at 0x4C2EDEB: free (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24624==    by 0x401AEF: remove_node (list.h:64)
-==24624==    by 0x401CB2: remove_from_back (list.h:100)
-==24624==    by 0x402BDC: run_script (execute.c:507)
-==24624==    by 0x401570: main (quash.c:133)
-==24624==  Block was alloc'd at
-==24624==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24624==    by 0x4026E5: create_process (execute.c:384)
-==24624==    by 0x402AFD: run_script (execute.c:501)
-==24624==    by 0x401570: main (quash.c:133)
-==24624== 
-==24624== Invalid read of size 4
-==24624==    at 0x402BA4: run_script (execute.c:511)
-==24624==    by 0x401570: main (quash.c:133)
-==24624==  Address 0x520ab30 is 0 bytes inside a block of size 4 free'd
-==24624==    at 0x4C2EDEB: free (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24624==    by 0x401AEF: remove_node (list.h:64)
-==24624==    by 0x401CB2: remove_from_back (list.h:100)
-==24624==    by 0x402BDC: run_script (execute.c:507)
-==24624==    by 0x401570: main (quash.c:133)
-==24624==  Block was alloc'd at
-==24624==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24624==    by 0x4026E5: create_process (execute.c:384)
-==24624==    by 0x402AFD: run_script (execute.c:501)
-==24624==    by 0x401570: main (quash.c:133)
-==24624== 
-==24907== Invalid read of size 4
-==24907==    at 0x402B7F: run_script (execute.c:510)
-==24907==    by 0x401570: main (quash.c:133)
-==24907==  Address 0x520ab30 is 0 bytes inside a block of size 4 free'd
-==24907==    at 0x4C2EDEB: free (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24907==    by 0x401AEF: remove_node (list.h:64)
-==24907==    by 0x401CB2: remove_from_back (list.h:100)
-==24907==    by 0x402BDC: run_script (execute.c:507)
-==24907==    by 0x401570: main (quash.c:133)
-==24907==  Block was alloc'd at
-==24907==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24907==    by 0x4026E5: create_process (execute.c:384)
-==24907==    by 0x402AFD: run_script (execute.c:501)
-==24907==    by 0x401570: main (quash.c:133)
-==24907== 
-==24907== Invalid read of size 4
-==24907==    at 0x402BA4: run_script (execute.c:511)
-==24907==    by 0x401570: main (quash.c:133)
-==24907==  Address 0x520ab30 is 0 bytes inside a block of size 4 free'd
-==24907==    at 0x4C2EDEB: free (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24907==    by 0x401AEF: remove_node (list.h:64)
-==24907==    by 0x401CB2: remove_from_back (list.h:100)
-==24907==    by 0x402BDC: run_script (execute.c:507)
-==24907==    by 0x401570: main (quash.c:133)
-==24907==  Block was alloc'd at
-==24907==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24907==    by 0x4026E5: create_process (execute.c:384)
-==24907==    by 0x402AFD: run_script (execute.c:501)
-==24907==    by 0x401570: main (quash.c:133)
-==24907== 
-==24911== Invalid read of size 4
-==24911==    at 0x4EAFAD0: fileno (fileno.c:35)
-==24911==    by 0x40284F: create_process (execute.c:426)
-==24911==    by 0x402AFD: run_script (execute.c:501)
-==24911==    by 0x401570: main (quash.c:133)
-==24911==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
-==24911== 
-==24911== 
-==24911== Process terminating with default action of signal 11 (SIGSEGV)
-==24911==  Access not within mapped region at address 0x0
-==24911==    at 0x4EAFAD0: fileno (fileno.c:35)
-==24911==    by 0x40284F: create_process (execute.c:426)
-==24911==    by 0x402AFD: run_script (execute.c:501)
-==24911==    by 0x401570: main (quash.c:133)
-==24911==  If you believe this happened as a result of a stack
-==24911==  overflow in your program's main thread (unlikely but
-==24911==  possible), you can try to increase the size of the
-==24911==  main thread stack using the --main-stacksize= flag.
-==24911==  The main thread stack size used in this run was 8388608.
-==24912== Invalid read of size 4
-==24912==    at 0x4EAFAD0: fileno (fileno.c:35)
-==24912==    by 0x40284F: create_process (execute.c:426)
-==24912==    by 0x402AFD: run_script (execute.c:501)
-==24912==    by 0x401570: main (quash.c:133)
-==24912==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
-==24912== 
-==24912== 
-==24912== Process terminating with default action of signal 11 (SIGSEGV)
-==24912==  Access not within mapped region at address 0x0
-==24912==    at 0x4EAFAD0: fileno (fileno.c:35)
-==24912==    by 0x40284F: create_process (execute.c:426)
-==24912==    by 0x402AFD: run_script (execute.c:501)
-==24912==    by 0x401570: main (quash.c:133)
-==24912==  If you believe this happened as a result of a stack
-==24912==  overflow in your program's main thread (unlikely but
-==24912==  possible), you can try to increase the size of the
-==24912==  main thread stack using the --main-stacksize= flag.
-==24912==  The main thread stack size used in this run was 8388608.
-==24910== Invalid read of size 4
-==24910==    at 0x4EAFAD0: fileno (fileno.c:35)
-==24910==    by 0x40284F: create_process (execute.c:426)
-==24910==    by 0x402AFD: run_script (execute.c:501)
-==24910==    by 0x401570: main (quash.c:133)
-==24910==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
-==24910== 
-==24910== 
-==24910== Process terminating with default action of signal 11 (SIGSEGV)
-==24910==  Access not within mapped region at address 0x0
-==24910==    at 0x4EAFAD0: fileno (fileno.c:35)
-==24910==    by 0x40284F: create_process (execute.c:426)
-==24910==    by 0x402AFD: run_script (execute.c:501)
-==24910==    by 0x401570: main (quash.c:133)
-==24910==  If you believe this happened as a result of a stack
-==24910==  overflow in your program's main thread (unlikely but
-==24910==  possible), you can try to increase the size of the
-==24910==  main thread stack using the --main-stacksize= flag.
-==24910==  The main thread stack size used in this run was 8388608.
-==24914== Invalid read of size 4
-==24914==    at 0x4EAFAD0: fileno (fileno.c:35)
-==24914==    by 0x40284F: create_process (execute.c:426)
-==24914==    by 0x402AFD: run_script (execute.c:501)
-==24914==    by 0x401570: main (quash.c:133)
-==24914==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
-==24914== 
-==24914== 
-==24914== Process terminating with default action of signal 11 (SIGSEGV)
-==24914==  Access not within mapped region at address 0x0
-==24914==    at 0x4EAFAD0: fileno (fileno.c:35)
-==24914==    by 0x40284F: create_process (execute.c:426)
-==24914==    by 0x402AFD: run_script (execute.c:501)
-==24914==    by 0x401570: main (quash.c:133)
-==24914==  If you believe this happened as a result of a stack
-==24914==  overflow in your program's main thread (unlikely but
-==24914==  possible), you can try to increase the size of the
-==24914==  main thread stack using the --main-stacksize= flag.
-==24914==  The main thread stack size used in this run was 8388608.
-==24912== 
-==24912== HEAP SUMMARY:
-==24912==     in use at exit: 21,902 bytes in 10 blocks
-==24912==   total heap usage: 43 allocs, 33 frees, 34,390 bytes allocated
-==24912== 
-==24912== 4 bytes in 1 blocks are definitely lost in loss record 2 of 10
-==24912==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24912==    by 0x4026E5: create_process (execute.c:384)
-==24912==    by 0x402AFD: run_script (execute.c:501)
-==24912==    by 0x401570: main (quash.c:133)
-==24912== 
-==24912== LEAK SUMMARY:
-==24912==    definitely lost: 4 bytes in 1 blocks
-==24912==    indirectly lost: 0 bytes in 0 blocks
-==24912==      possibly lost: 0 bytes in 0 blocks
-==24912==    still reachable: 21,898 bytes in 9 blocks
-==24912==         suppressed: 0 bytes in 0 blocks
-==24912== Reachable blocks (those to which a pointer was found) are not shown.
-==24912== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==24912== 
-==24912== For counts of detected and suppressed errors, rerun with: -v
-==24912== ERROR SUMMARY: 6 errors from 4 contexts (suppressed: 0 from 0)
-==24914== 
-==24914== HEAP SUMMARY:
-==24914==     in use at exit: 21,906 bytes in 11 blocks
-==24914==   total heap usage: 42 allocs, 31 frees, 34,366 bytes allocated
-==24914== 
-==24914== 8 bytes in 2 blocks are definitely lost in loss record 3 of 10
-==24914==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24914==    by 0x4026E5: create_process (execute.c:384)
-==24914==    by 0x402AFD: run_script (execute.c:501)
-==24914==    by 0x401570: main (quash.c:133)
-==24914== 
-==24914== LEAK SUMMARY:
-==24914==    definitely lost: 8 bytes in 2 blocks
-==24914==    indirectly lost: 0 bytes in 0 blocks
-==24914==      possibly lost: 0 bytes in 0 blocks
-==24914==    still reachable: 21,898 bytes in 9 blocks
-==24914==         suppressed: 0 bytes in 0 blocks
-==24914== Reachable blocks (those to which a pointer was found) are not shown.
-==24914== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==24914== 
-==24914== For counts of detected and suppressed errors, rerun with: -v
-==24914== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
-==24911== 
-==24911== HEAP SUMMARY:
-==24911==     in use at exit: 21,898 bytes in 9 blocks
-==24911==   total heap usage: 44 allocs, 35 frees, 34,414 bytes allocated
-==24911== 
-==24911== LEAK SUMMARY:
-==24911==    definitely lost: 0 bytes in 0 blocks
-==24911==    indirectly lost: 0 bytes in 0 blocks
-==24911==      possibly lost: 0 bytes in 0 blocks
-==24911==    still reachable: 21,898 bytes in 9 blocks
-==24911==         suppressed: 0 bytes in 0 blocks
-==24911== Reachable blocks (those to which a pointer was found) are not shown.
-==24911== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==24911== 
-==24911== For counts of detected and suppressed errors, rerun with: -v
-==24911== ERROR SUMMARY: 7 errors from 3 contexts (suppressed: 0 from 0)
-==24910== 
-==24910== HEAP SUMMARY:
-==24910==     in use at exit: 21,902 bytes in 10 blocks
-==24910==   total heap usage: 43 allocs, 33 frees, 34,390 bytes allocated
-==24910== 
-==24910== 4 bytes in 1 blocks are definitely lost in loss record 2 of 10
-==24910==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24910==    by 0x4026E5: create_process (execute.c:384)
-==24910==    by 0x402AFD: run_script (execute.c:501)
-==24910==    by 0x401570: main (quash.c:133)
-==24910== 
-==24910== LEAK SUMMARY:
-==24910==    definitely lost: 4 bytes in 1 blocks
-==24910==    indirectly lost: 0 bytes in 0 blocks
-==24910==      possibly lost: 0 bytes in 0 blocks
-==24910==    still reachable: 21,898 bytes in 9 blocks
-==24910==         suppressed: 0 bytes in 0 blocks
-==24910== Reachable blocks (those to which a pointer was found) are not shown.
-==24910== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==24910== 
-==24910== For counts of detected and suppressed errors, rerun with: -v
-==24910== ERROR SUMMARY: 6 errors from 4 contexts (suppressed: 0 from 0)
-==24907== 
-==24907== HEAP SUMMARY:
-==24907==     in use at exit: 8 bytes in 2 blocks
-==24907==   total heap usage: 42 allocs, 40 frees, 33,838 bytes allocated
-==24907== 
-==24907== 8 bytes in 2 blocks are definitely lost in loss record 1 of 1
-==24907==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24907==    by 0x4026E5: create_process (execute.c:384)
-==24907==    by 0x402AFD: run_script (execute.c:501)
-==24907==    by 0x401570: main (quash.c:133)
-==24907== 
-==24907== LEAK SUMMARY:
-==24907==    definitely lost: 8 bytes in 2 blocks
-==24907==    indirectly lost: 0 bytes in 0 blocks
-==24907==      possibly lost: 0 bytes in 0 blocks
-==24907==    still reachable: 0 bytes in 0 blocks
-==24907==         suppressed: 0 bytes in 0 blocks
-==24907== 
-==24907== For counts of detected and suppressed errors, rerun with: -v
-==24907== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
-==24906== 
-==24906== HEAP SUMMARY:
-==24906==     in use at exit: 4 bytes in 1 blocks
-==24906==   total heap usage: 43 allocs, 42 frees, 33,862 bytes allocated
-==24906== 
-==24906== 4 bytes in 1 blocks are definitely lost in loss record 1 of 1
-==24886== 
-==24906==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24886== HEAP SUMMARY:
-==24886==     in use at exit: 4 bytes in 1 blocks
-==24886==   total heap usage: 43 allocs, 42 frees, 33,862 bytes allocated
-==24886== 
-==24906==    by 0x4026E5: create_process (execute.c:384)
-==24906==    by 0x402AFD: run_script (execute.c:501)
-==24906==    by 0x401570: main (quash.c:133)
-==24906== 
-==24906== LEAK SUMMARY:
-==24906==    definitely lost: 4 bytes in 1 blocks
-==24906==    indirectly lost: 0 bytes in 0 blocks
-==24906==      possibly lost: 0 bytes in 0 blocks
-==24906==    still reachable: 0 bytes in 0 blocks
-==24906==         suppressed: 0 bytes in 0 blocks
-==24906== 
-==24906== For counts of detected and suppressed errors, rerun with: -v
-==24906== ERROR SUMMARY: 5 errors from 3 contexts (suppressed: 0 from 0)
-==24886== 4 bytes in 1 blocks are definitely lost in loss record 1 of 1
-==24886==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==24886==    by 0x4026E5: create_process (execute.c:384)
-==24886==    by 0x402AFD: run_script (execute.c:501)
-==24886==    by 0x401570: main (quash.c:133)
-==24886== 
-==24886== LEAK SUMMARY:
-==24886==    definitely lost: 4 bytes in 1 blocks
-==24886==    indirectly lost: 0 bytes in 0 blocks
-==24886==      possibly lost: 0 bytes in 0 blocks
-==24886==    still reachable: 0 bytes in 0 blocks
-==24886==         suppressed: 0 bytes in 0 blocks
-==24886== 
-==24886== For counts of detected and suppressed errors, rerun with: -v
-==24886== ERROR SUMMARY: 5 errors from 3 contexts (suppressed: 0 from 0)
-==24624== 
-==24624== HEAP SUMMARY:
-==24624==     in use at exit: 0 bytes in 0 blocks
-==24624==   total heap usage: 44 allocs, 44 frees, 33,886 bytes allocated
-==24624== 
-==24624== All heap blocks were freed -- no leaks are possible
-==24624== 
-==24624== For counts of detected and suppressed errors, rerun with: -v
-==24624== ERROR SUMMARY: 6 errors from 2 contexts (suppressed: 0 from 0)
+==28225== Memcheck, a memory error detector
+==28225== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==28225== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==28225== Command: /home/kamini/EECS678/Project1/Quash/quash/quash
+==28225== 
+==28433== Invalid read of size 4
+==28433==    at 0x4EAFAD0: fileno (fileno.c:35)
+==28433==    by 0x40284F: create_process (execute.c:426)
+==28433==    by 0x402AFD: run_script (execute.c:501)
+==28433==    by 0x401570: main (quash.c:133)
+==28433==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==28433== 
+==28433== 
+==28433== Process terminating with default action of signal 11 (SIGSEGV)
+==28433==  Access not within mapped region at address 0x0
+==28433==    at 0x4EAFAD0: fileno (fileno.c:35)
+==28433==    by 0x40284F: create_process (execute.c:426)
+==28433==    by 0x402AFD: run_script (execute.c:501)
+==28433==    by 0x401570: main (quash.c:133)
+==28433==  If you believe this happened as a result of a stack
+==28433==  overflow in your program's main thread (unlikely but
+==28433==  possible), you can try to increase the size of the
+==28433==  main thread stack using the --main-stacksize= flag.
+==28433==  The main thread stack size used in this run was 8388608.
+==28429== Invalid read of size 4
+==28429==    at 0x4EAFAD0: fileno (fileno.c:35)
+==28429==    by 0x40284F: create_process (execute.c:426)
+==28429==    by 0x402AFD: run_script (execute.c:501)
+==28429==    by 0x401570: main (quash.c:133)
+==28429==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==28429== 
+==28429== 
+==28429== Process terminating with default action of signal 11 (SIGSEGV)
+==28429==  Access not within mapped region at address 0x0
+==28429==    at 0x4EAFAD0: fileno (fileno.c:35)
+==28429==    by 0x40284F: create_process (execute.c:426)
+==28429==    by 0x402AFD: run_script (execute.c:501)
+==28429==    by 0x401570: main (quash.c:133)
+==28429==  If you believe this happened as a result of a stack
+==28429==  overflow in your program's main thread (unlikely but
+==28429==  possible), you can try to increase the size of the
+==28429==  main thread stack using the --main-stacksize= flag.
+==28429==  The main thread stack size used in this run was 8388608.
+==28433== 
+==28433== HEAP SUMMARY:
+==28433==     in use at exit: 21,902 bytes in 10 blocks
+==28433==   total heap usage: 43 allocs, 33 frees, 34,390 bytes allocated
+==28433== 
+==28433== 4 bytes in 1 blocks are definitely lost in loss record 2 of 10
+==28433==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==28433==    by 0x4026E5: create_process (execute.c:384)
+==28433==    by 0x402AFD: run_script (execute.c:501)
+==28433==    by 0x401570: main (quash.c:133)
+==28433== 
+==28433== LEAK SUMMARY:
+==28433==    definitely lost: 4 bytes in 1 blocks
+==28433==    indirectly lost: 0 bytes in 0 blocks
+==28433==      possibly lost: 0 bytes in 0 blocks
+==28433==    still reachable: 21,898 bytes in 9 blocks
+==28433==         suppressed: 0 bytes in 0 blocks
+==28433== Reachable blocks (those to which a pointer was found) are not shown.
+==28433== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==28433== 
+==28433== For counts of detected and suppressed errors, rerun with: -v
+==28433== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+==28429== 
+==28429== HEAP SUMMARY:
+==28429==     in use at exit: 21,906 bytes in 11 blocks
+==28429==   total heap usage: 42 allocs, 31 frees, 34,366 bytes allocated
+==28429== 
+==28429== 8 bytes in 2 blocks are definitely lost in loss record 3 of 10
+==28429==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==28429==    by 0x4026E5: create_process (execute.c:384)
+==28429==    by 0x402AFD: run_script (execute.c:501)
+==28429==    by 0x401570: main (quash.c:133)
+==28429== 
+==28429== LEAK SUMMARY:
+==28429==    definitely lost: 8 bytes in 2 blocks
+==28429==    indirectly lost: 0 bytes in 0 blocks
+==28429==      possibly lost: 0 bytes in 0 blocks
+==28429==    still reachable: 21,898 bytes in 9 blocks
+==28429==         suppressed: 0 bytes in 0 blocks
+==28429== Reachable blocks (those to which a pointer was found) are not shown.
+==28429== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==28429== 
+==28429== For counts of detected and suppressed errors, rerun with: -v
+==28429== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+==28414== 
+==28414== HEAP SUMMARY:
+==28414==     in use at exit: 8 bytes in 2 blocks
+==28414==   total heap usage: 42 allocs, 40 frees, 33,838 bytes allocated
+==28414== 
+==28414== 8 bytes in 2 blocks are definitely lost in loss record 1 of 1
+==28414==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==28414==    by 0x4026E5: create_process (execute.c:384)
+==28414==    by 0x402AFD: run_script (execute.c:501)
+==28414==    by 0x401570: main (quash.c:133)
+==28414== 
+==28414== LEAK SUMMARY:
+==28414==    definitely lost: 8 bytes in 2 blocks
+==28414==    indirectly lost: 0 bytes in 0 blocks
+==28414==      possibly lost: 0 bytes in 0 blocks
+==28414==    still reachable: 0 bytes in 0 blocks
+==28414==         suppressed: 0 bytes in 0 blocks
+==28414== 
+==28414== For counts of detected and suppressed errors, rerun with: -v
+==28414== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==28490== Invalid read of size 4
+==28490==    at 0x4EAFAD0: fileno (fileno.c:35)
+==28490==    by 0x40284F: create_process (execute.c:426)
+==28490==    by 0x402AFD: run_script (execute.c:501)
+==28490==    by 0x401570: main (quash.c:133)
+==28490==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==28490== 
+==28490== 
+==28490== Process terminating with default action of signal 11 (SIGSEGV)
+==28490==  Access not within mapped region at address 0x0
+==28490==    at 0x4EAFAD0: fileno (fileno.c:35)
+==28490==    by 0x40284F: create_process (execute.c:426)
+==28490==    by 0x402AFD: run_script (execute.c:501)
+==28490==    by 0x401570: main (quash.c:133)
+==28490==  If you believe this happened as a result of a stack
+==28490==  overflow in your program's main thread (unlikely but
+==28490==  possible), you can try to increase the size of the
+==28490==  main thread stack using the --main-stacksize= flag.
+==28490==  The main thread stack size used in this run was 8388608.
+==28415== 
+==28415== HEAP SUMMARY:
+==28415==     in use at exit: 4 bytes in 1 blocks
+==28415==   total heap usage: 43 allocs, 42 frees, 33,862 bytes allocated
+==28415== 
+==28415== 4 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==28415==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==28415==    by 0x4026E5: create_process (execute.c:384)
+==28415==    by 0x402AFD: run_script (execute.c:501)
+==28415==    by 0x401570: main (quash.c:133)
+==28415== 
+==28415== LEAK SUMMARY:
+==28415==    definitely lost: 4 bytes in 1 blocks
+==28415==    indirectly lost: 0 bytes in 0 blocks
+==28415==      possibly lost: 0 bytes in 0 blocks
+==28415==    still reachable: 0 bytes in 0 blocks
+==28415==         suppressed: 0 bytes in 0 blocks
+==28415== 
+==28415== For counts of detected and suppressed errors, rerun with: -v
+==28415== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==28490== 
+==28490== HEAP SUMMARY:
+==28490==     in use at exit: 21,902 bytes in 10 blocks
+==28490==   total heap usage: 43 allocs, 33 frees, 34,390 bytes allocated
+==28490== 
+==28490== 4 bytes in 1 blocks are definitely lost in loss record 2 of 10
+==28490==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==28490==    by 0x4026E5: create_process (execute.c:384)
+==28490==    by 0x402AFD: run_script (execute.c:501)
+==28490==    by 0x401570: main (quash.c:133)
+==28490== 
+==28490== LEAK SUMMARY:
+==28490==    definitely lost: 4 bytes in 1 blocks
+==28490==    indirectly lost: 0 bytes in 0 blocks
+==28490==      possibly lost: 0 bytes in 0 blocks
+==28490==    still reachable: 21,898 bytes in 9 blocks
+==28490==         suppressed: 0 bytes in 0 blocks
+==28490== Reachable blocks (those to which a pointer was found) are not shown.
+==28490== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==28490== 
+==28490== For counts of detected and suppressed errors, rerun with: -v
+==28490== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+==28392== 
+==28392== HEAP SUMMARY:
+==28392==     in use at exit: 4 bytes in 1 blocks
+==28392==   total heap usage: 43 allocs, 42 frees, 33,862 bytes allocated
+==28392== 
+==28392== 4 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==28392==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==28392==    by 0x4026E5: create_process (execute.c:384)
+==28392==    by 0x402AFD: run_script (execute.c:501)
+==28392==    by 0x401570: main (quash.c:133)
+==28392== 
+==28392== LEAK SUMMARY:
+==28392==    definitely lost: 4 bytes in 1 blocks
+==28392==    indirectly lost: 0 bytes in 0 blocks
+==28392==      possibly lost: 0 bytes in 0 blocks
+==28392==    still reachable: 0 bytes in 0 blocks
+==28392==         suppressed: 0 bytes in 0 blocks
+==28392== 
+==28392== For counts of detected and suppressed errors, rerun with: -v
+==28392== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==28570== Invalid read of size 4
+==28570==    at 0x4EAFAD0: fileno (fileno.c:35)
+==28570==    by 0x40284F: create_process (execute.c:426)
+==28570==    by 0x402AFD: run_script (execute.c:501)
+==28570==    by 0x401570: main (quash.c:133)
+==28570==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==28570== 
+==28570== 
+==28570== Process terminating with default action of signal 11 (SIGSEGV)
+==28570==  Access not within mapped region at address 0x0
+==28570==    at 0x4EAFAD0: fileno (fileno.c:35)
+==28570==    by 0x40284F: create_process (execute.c:426)
+==28570==    by 0x402AFD: run_script (execute.c:501)
+==28570==    by 0x401570: main (quash.c:133)
+==28570==  If you believe this happened as a result of a stack
+==28570==  overflow in your program's main thread (unlikely but
+==28570==  possible), you can try to increase the size of the
+==28570==  main thread stack using the --main-stacksize= flag.
+==28570==  The main thread stack size used in this run was 8388608.
+==28570== 
+==28570== HEAP SUMMARY:
+==28570==     in use at exit: 21,898 bytes in 9 blocks
+==28570==   total heap usage: 44 allocs, 35 frees, 34,414 bytes allocated
+==28570== 
+==28570== LEAK SUMMARY:
+==28570==    definitely lost: 0 bytes in 0 blocks
+==28570==    indirectly lost: 0 bytes in 0 blocks
+==28570==      possibly lost: 0 bytes in 0 blocks
+==28570==    still reachable: 21,898 bytes in 9 blocks
+==28570==         suppressed: 0 bytes in 0 blocks
+==28570== Reachable blocks (those to which a pointer was found) are not shown.
+==28570== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==28570== 
+==28570== For counts of detected and suppressed errors, rerun with: -v
+==28570== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==28225== 
+==28225== HEAP SUMMARY:
+==28225==     in use at exit: 0 bytes in 0 blocks
+==28225==   total heap usage: 44 allocs, 44 frees, 33,886 bytes allocated
+==28225== 
+==28225== All heap blocks were freed -- no leaks are possible
+==28225== 
+==28225== For counts of detected and suppressed errors, rerun with: -v
+==28225== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

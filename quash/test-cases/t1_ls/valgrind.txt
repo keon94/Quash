@@ -1,14 +1,14 @@
-==24227== Memcheck, a memory error detector
-==24227== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
-==24227== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
-==24227== Command: /home/kamini/EECS678/Project1/Quash/quash/quash
-==24227== 
-==24227== 
-==24227== HEAP SUMMARY:
-==24227==     in use at exit: 0 bytes in 0 blocks
-==24227==   total heap usage: 11 allocs, 11 frees, 21,986 bytes allocated
-==24227== 
-==24227== All heap blocks were freed -- no leaks are possible
-==24227== 
-==24227== For counts of detected and suppressed errors, rerun with: -v
-==24227== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==27825== Memcheck, a memory error detector
+==27825== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==27825== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==27825== Command: /home/kamini/EECS678/Project1/Quash/quash/quash
+==27825== 
+==27825== 
+==27825== HEAP SUMMARY:
+==27825==     in use at exit: 0 bytes in 0 blocks
+==27825==   total heap usage: 11 allocs, 11 frees, 21,986 bytes allocated
+==27825== 
+==27825== All heap blocks were freed -- no leaks are possible
+==27825== 
+==27825== For counts of detected and suppressed errors, rerun with: -v
+==27825== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
