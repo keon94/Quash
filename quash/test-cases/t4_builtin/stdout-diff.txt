@@ -1,7 +1,0 @@
-1c1,4
-< /home/kamini/EECS678/Project1/Quash/quash/test-cases/t4_builtin/sandbox 
----
-> sandbox
-> sandbox
-> hello
-> hello
