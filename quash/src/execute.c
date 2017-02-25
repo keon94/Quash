@@ -406,18 +406,20 @@ void create_process(CommandHolder holder, Job* job) {
       dup2(job->process_pipe[P_READ], STDIN_FILENO);
     }
 
-    if(r_out==true && r_app==true){
-        FILE* out_file;
-        out_file=fopen(holder.redirect_out,"a"); //a indicated append
-        
-        dup2(fileno(out_file),STDOUT_FILENO); //http://stackoverflow.com/questions/14543443/in-c-how-do-you-redirect-stdin-stdout-stderr-to-files-when-making-an-execvp-or-- was throwing a really weird warning because it wasn't cast
-        fclose(out_file);
-    }
     if(r_out == true){
-        FILE* out_file;
-        out_file=fopen(holder.redirect_out,"w"); //w indicates write
-        dup2(fileno(out_file),STDOUT_FILENO);
-        fclose(out_file);
+        if(r_app==true){
+          FILE* out_file;
+          out_file=fopen(holder.redirect_out,"a"); //a indicated append
+          
+          dup2(fileno(out_file),STDOUT_FILENO); //http://stackoverflow.com/questions/14543443/in-c-how-do-you-redirect-stdin-stdout-stderr-to-files-when-making-an-execvp-or-- was throwing a really weird warning because it wasn't cast
+          fclose(out_file);
+        }
+        else{
+          FILE* out_file;
+          out_file=fopen(holder.redirect_out,"w"); //w indicates write
+          dup2(fileno(out_file),STDOUT_FILENO);
+          fclose(out_file);
+        }
     }
     
     if(r_in == true){
