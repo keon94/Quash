@@ -19,6 +19,8 @@
 #include <signal.h>
 #include "list.h"
 
+#define P_READ 0
+#define P_WRITE 1
 
 // Remove this and all expansion calls to it
 /**
@@ -36,12 +38,12 @@ typedef struct Job{
   int job_id;  //id for the job
   List pid_list; //the process ids of the processes in the job
   char* cmd_input; //received cmd command for the job
-  int process_pipe[2];
+  int job_pipe[2][2];
+  int prev_pipe;
+  int next_pipe;
 } Job;
 
 List job_list = {NULL, NULL, 0};
-
-//int process_pipe[2];
 
 //removes a job whose processes have all terminated
 void remove_job(Job* job){
@@ -353,7 +355,7 @@ void printList(List *l){
  *
  * @sa Command CommandHolder
  */
-void create_process(CommandHolder holder, Job* job) {
+void create_process(CommandHolder holder, Job* job) { //Multi-pipelining was accomplished using Waqar's algorithm.
   // Read the flags field from the parser
   bool p_in  = holder.flags & PIPE_IN;
   bool p_out = holder.flags & PIPE_OUT;
@@ -369,8 +371,6 @@ void create_process(CommandHolder holder, Job* job) {
   (void) r_out; // Silence unused variable warning
   (void) r_app; // Silence unused variable warning
 
-  #define P_READ 0
-  #define P_WRITE 1
   //printf("Proc: %d , Pipes: p_in %d, p_out %d\n", getpid(), p_in, p_out);
 
   // TODO: Setup pipes, redirects, and new process
@@ -379,38 +379,59 @@ void create_process(CommandHolder holder, Job* job) {
   //check if piping is necessary
   
 
-  
+  //ps aux | grep conky | grep -v grep
+
+  if(p_out){
+    pipe(job->job_pipe[job->next_pipe]);
+  }
 
 	pid_t *m_pid = malloc(sizeof(pid_t));
 	*m_pid = fork();
 
 	if(*m_pid == 0){
     //printf("child pid %d now executing %s.\n", getpid(), holder.cmd.generic.args[0]);
-    if(p_out == true) { //the writer child to the pipe
-      //printf("writer pid %d from parent %d: Pipes: p_in %d, p_out %d\n", getpid(), getppid(), p_in, p_out);
-      if(close(job->process_pipe[P_READ]) < 0){ 
-        fprintf(stderr, "Child Error: Failure in closing the Write-end of process_pipe. Error no. %d\n", errno); 
+    /*
+    if(p_in && p_out){  //we're in the middle of the pipe-line
+    printf("middle pid %d from parent pid %d Pipes: p_in %d, p_out %d\n", getpid(), getppid(), p_in, p_out);
+        dup2(job->job_pipe[P_READ], STDIN_FILENO);
+        dup2(job->job_pipe[P_WRITE], STDOUT_FILENO);
+    } */  
+    if(p_out) { //the writer child to the pipe
+      #if 0
+      printf("writer pid %d from parent %d: Pipes: p_in %d, p_out %d\n", getpid(), getppid(), p_in, p_out);
+      if(close(job->job_pipe[P_READ]) < 0){ 
+        fprintf(stderr, "Child Process %d Error: Failure in closing the Write-end of job_pipe. Error no. %d\n", getpid(), errno); 
         return;
       }
-      dup2(job->process_pipe[P_WRITE], STDOUT_FILENO);
+      dup2(job->job_pipe[P_WRITE], STDOUT_FILENO);
       //printf("child pid %d has dup2d.\n", getpid());
-      //return;
+      #endif
+      dup2 (job->job_pipe[job->next_pipe][P_WRITE], STDOUT_FILENO);
+
+        /* We are never going to read from our own pipe so we can safely close it */
+      close (job->job_pipe[job->next_pipe][P_READ]);
     } //find test-cases -type f -name '*'.txt | grep valgrind
        
-    if(p_in == true){ //the reader child from the pipe
-      //printf("reader pid %d from parent pid %d Pipes: p_in %d, p_out %d\n", getpid(), getppid(), p_in, p_out);
-      if(close(job->process_pipe[P_WRITE]) < 0){ 
-        fprintf(stderr, "Child Error: Failure in closing the Write-end of process_pipe. Error no. %d\n", errno); 
+    if(p_in){ //the reader child from the pipe
+      #if 0
+      printf("reader pid %d from parent pid %d Pipes: p_in %d, p_out %d\n", getpid(), getppid(), p_in, p_out);
+      if(close(job->job_pipe[P_WRITE]) < 0){ 
+        fprintf(stderr, "Child Process %d Error: Failure in closing the Write-end of job_pipe. Error no. %d\n", getpid(), errno); 
         return;
       }
-      dup2(job->process_pipe[P_READ], STDIN_FILENO);
+      dup2(job->job_pipe[P_READ], STDIN_FILENO);
+      #endif
+      dup2 (job->job_pipe[job->prev_pipe][P_READ], STDIN_FILENO);
+
+        
+        /* We are never going to write to the previous pipe so we can safely close it */
+      close (job->job_pipe[job->prev_pipe][P_WRITE]);
     }
 
     if(r_out == true){
         if(r_app==true){
           FILE* out_file;
           out_file=fopen(holder.redirect_out,"a"); //a indicated append
-          
           dup2(fileno(out_file),STDOUT_FILENO); //http://stackoverflow.com/questions/14543443/in-c-how-do-you-redirect-stdin-stdout-stderr-to-files-when-making-an-execvp-or-- was throwing a really weird warning because it wasn't cast
           fclose(out_file);
         }
@@ -433,27 +454,36 @@ void create_process(CommandHolder holder, Job* job) {
     exit(EXIT_SUCCESS);
 	}
 	else{  
-    //dup2(process_pipe[P_READ], STDIN_FILENO);
+    //dup2(job_pipe[P_READ], STDIN_FILENO);
     /*
     if(p_out){
-      //close(process_pipe[P_WRITE]);
-      if(close(process_pipe[P_READ]) < 0)
+      //close(job_pipe[P_WRITE]);
+      if(close(job_pipe[P_READ]) < 0)
       { 
-        fprintf(stderr, "Error: Failure in closing the Write-end of process_pipe. Error no. %d\n", errno); 
+        fprintf(stderr, "Error: Failure in closing the Write-end of job_pipe. Error no. %d\n", errno); 
       } 
     }*/
-
+    #if 0
     if(p_in){ //parent must close the end of the pipe
-      if(close(job->process_pipe[P_READ]) < 0)
+      if(close(job->job_pipe[P_READ]) < 0)
       { 
-        fprintf(stderr, "Error: Failure in closing the Write-end of process_pipe. Error no. %d\n", errno); 
+        fprintf(stderr, "Parent Error: Failure in closing the Write-end of job_pipe. Error no. %d\n", errno); 
       } 
 
-      if(close(job->process_pipe[P_WRITE]) < 0)
+      if(close(job->job_pipe[P_WRITE]) < 0)
       { 
-        fprintf(stderr, "Error: Failure in closing the Read-end of process_pipe. Error no. %d\n", errno); 
+        fprintf(stderr, "Parent Error: Failure in closing the Read-end of job_pipe. Error no. %d\n", errno); 
       } 
     }
+    #endif
+
+    if (p_out){
+      close (job->job_pipe[job->next_pipe][P_WRITE]);
+    }
+
+    /* Update the pipe trackers for next iteration */
+    job->next_pipe = (job->next_pipe + 1) % 2;
+    job->prev_pipe = (job->prev_pipe + 1) % 2;
 
     if(get_command_type(holder.cmd) == CD || get_command_type(holder.cmd) == EXPORT || get_command_type(holder.cmd) == KILL)
 		  parent_run_command(holder.cmd); // This should be done in the parent branch of // a fork   
@@ -468,9 +498,11 @@ void init_job(Job* job){
   job->job_id = 1;
   init_list(&job->pid_list);
   job->cmd_input = get_command_string();
-  if(pipe(job->process_pipe) < 0){
+  /*if(pipe(job->job_pipe) < 0){
     fprintf(stderr, "Piping failed for the command %s. Error no. %d", get_command_string(), errno);
-  }
+  }*/
+  job->prev_pipe = -1;
+  job->next_pipe = 0;
 }
 
 // Run a list of commands
@@ -493,7 +525,7 @@ void run_script(CommandHolder* holders) {
   CommandType type;
   // Run all commands in the `holder` array. This is every process's cmd per job'
   /*
-  if(pipe(process_pipe) < 0){
+  if(pipe(job_pipe) < 0){
     fprintf(stderr, "Piping Failed. ERROR no. %d\n", errno);
     return;
   }
