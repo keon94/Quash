@@ -364,22 +364,7 @@ void create_process(CommandHolder holder, Job* job) { //Multi-pipelining was acc
   bool r_app = holder.flags & REDIRECT_APPEND; // This can only be true if r_out
                                                // is true
 
-  // TODO: Remove warning silencers
-  (void) p_in;  // Silence unused variable warning
-  (void) p_out; // Silence unused variable warning
-  (void) r_in;  // Silence unused variable warning
-  (void) r_out; // Silence unused variable warning
-  (void) r_app; // Silence unused variable warning
-
   //printf("Proc: %d , Pipes: p_in %d, p_out %d\n", getpid(), p_in, p_out);
-
-  // TODO: Setup pipes, redirects, and new process
-  //IMPLEMENT_ME();
-
-  //check if piping is necessary
-  
-
-  //ps aux | grep conky | grep -v grep
 
   if(p_out){
     pipe(job->job_pipe[job->next_pipe]);
@@ -454,16 +439,16 @@ void create_process(CommandHolder holder, Job* job) { //Multi-pipelining was acc
     exit(EXIT_SUCCESS);
 	}
 	else{  
-    //dup2(job_pipe[P_READ], STDIN_FILENO);
-    /*
+    #if 0
+    dup2(job_pipe[P_READ], STDIN_FILENO);    
     if(p_out){
       //close(job_pipe[P_WRITE]);
       if(close(job_pipe[P_READ]) < 0)
       { 
         fprintf(stderr, "Error: Failure in closing the Write-end of job_pipe. Error no. %d\n", errno); 
       } 
-    }*/
-    #if 0
+    }
+    
     if(p_in){ //parent must close the end of the pipe
       if(close(job->job_pipe[P_READ]) < 0)
       { 
